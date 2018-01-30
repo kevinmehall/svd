@@ -232,6 +232,7 @@ pub struct ClusterInfo {
     pub reset_value: Option<u32>,
     pub reset_mask: Option<u32>,
     pub derived_from: Option<String>,
+    pub alternate_cluster: Option<String>,
     pub children: Vec<Either<Register, Cluster>>,
     // Reserve the right to add more fields to this struct
     _extensible: (),
@@ -250,6 +251,7 @@ pub struct RegisterInfo {
     pub fields: Option<Vec<Field>>,
     pub write_constraint: Option<WriteConstraint>,
     pub derived_from: Option<String>,
+    pub alternate_register: Option<String>,
     // Reserve the right to add more fields to this struct
     _extensible: (),
 }
@@ -342,6 +344,7 @@ impl ClusterInfo {
             derived_from: tree.attributes
                 .get(&"derivedFrom".to_owned())
                 .map(|s| s.to_owned()),
+            alternate_cluster: tree.get_child_text("alternateCluster"),
             children: tree.children
                 .iter()
                 .filter(|t| t.name == "register" || t.name == "cluster")
@@ -374,6 +377,7 @@ impl RegisterInfo {
             derived_from: tree.attributes
                 .get(&"derivedFrom".to_owned())
                 .map(|s| s.to_owned()),
+            alternate_register: tree.get_child_text("alternateRegister"),
             _extensible: (),
         }
     }
